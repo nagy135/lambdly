@@ -1,7 +1,6 @@
 import "~/styles/globals.css";
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
-import { GeistSans } from "geist/font/sans";
+import { Insert } from "~/components/insert";
 
 export const metadata = {
 	title: "Create T3 App",
@@ -24,6 +23,7 @@ export default function RootLayout({
 						</SignedOut>
 						<SignedIn>
 							<UserButton />
+							<Insert />
 						</SignedIn>
 					</header>
 					<main>
