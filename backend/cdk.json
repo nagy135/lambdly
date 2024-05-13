@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/aws-lambda-bootstrap.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/lambdly.ts",
   "watch": {
     "include": [
       "**"

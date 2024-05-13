@@ -6,11 +6,11 @@ import { Construct } from "constructs";
 
 export class ApiGateway extends RestApi {
 	constructor(scope: Construct, apiName: string) {
-		super(scope, "ApiGateway", {
+		super(scope, "LambdlyApiGateway", {
 			restApiName: apiName,
 			deployOptions: {
-				accessLogDestination: new LogGroupLogDestination(new LogGroup(scope, "ApiLogGroup", {
-					logGroupName: "api_gateway",
+				accessLogDestination: new LogGroupLogDestination(new LogGroup(scope, "LambdlyApiLogGroup", {
+					logGroupName: "lambdly_api_gateway",
 					retention: RetentionDays.ONE_DAY,
 					removalPolicy: RemovalPolicy.DESTROY
 				}))

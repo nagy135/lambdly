@@ -1,8 +1,8 @@
 {
-  "name": "aws-lambda-bootstrap",
+  "name": "lamdly",
   "version": "0.1.0",
   "bin": {
-    "aws-lambda-bootstrap": "bin/aws-lambda-bootstrap.js"
+    "lambdly": "bin/lambdly.js"
   },
   "scripts": {
     "build": "tsc",
