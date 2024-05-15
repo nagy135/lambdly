@@ -1,15 +1,15 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayEvent } from "aws-lambda";
+import { plainToInstance } from "class-transformer";
+import { Link } from "../src/entities/link.entity";
+import { validateOrReject } from "class-validator";
 
 const db = DynamoDBDocument.from(new DynamoDB());
-
+const tableName = process.env.TABLE_NAME;
 
 export const handler = async function(event: APIGatewayEvent) {
-	console.log("request:", JSON.stringify(event, undefined, 2));
-	const tableName = process.env.TABLE_NAME;
-	const PRIMARY_KEY = "id";
-
+	console.log("[INFO] request:", JSON.stringify(event, undefined, 2));
 
 	if (!tableName) {
 		return {
@@ -17,6 +17,17 @@ export const handler = async function(event: APIGatewayEvent) {
 			body: "TABLE_NAME environment variable is not set"
 		};
 	}
+
+	const possibleLink = plainToInstance(Link, JSON.parse(event.body ?? "{}"));
+	try {
+		await validateOrReject(possibleLink);
+	} catch (error) {
+		return {
+			statusCode: 400,
+			body: JSON.stringify(error, undefined, 2)
+		};
+	}
+
 
 	const item = typeof event.body === "object"
 		? event.body
@@ -26,10 +37,12 @@ export const handler = async function(event: APIGatewayEvent) {
 	console.log("item:", JSON.stringify(item, undefined, 2));
 
 	try {
-		await db.put({
+		const response = await db.put({
 			TableName: tableName,
-			Item: item
+			Item: item,
+			ConditionExpression: `attribute_not_exists(${PRIMARY_KEY})`
 		});
+		console.log("response:", JSON.stringify(response, undefined, 2));
 		return {
 			statusCode: 200,
 			body: JSON.stringify(item),
@@ -37,6 +50,7 @@ export const handler = async function(event: APIGatewayEvent) {
 	} catch (error) {
 		return {
 			statusCode: 500,
+			body: JSON.stringify(error, undefined, 2)
 		};
 
 	}
