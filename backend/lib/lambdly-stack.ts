@@ -12,7 +12,7 @@ export class LambdlyStack extends cdk.Stack {
 
 		const table = new Table(this, 'lambdlytable', {
 			billingMode: BillingMode.PAY_PER_REQUEST,
-			partitionKey: { name: 'id', type: AttributeType.STRING },
+			partitionKey: { name: 'PK', type: AttributeType.STRING },
 		});
 
 		const healthLambda = new Lambda(this, 'health.ts');
@@ -21,12 +21,17 @@ export class LambdlyStack extends cdk.Stack {
 			{ environment: { TABLE_NAME: table.tableName } }
 		);
 
+		const getLinkLambda = new Lambda(this, 'get-link.ts',
+			{ environment: { TABLE_NAME: table.tableName } }
+		);
 
 
 		table.grantWriteData(createLinkLambda);
+		table.grantReadData(getLinkLambda);
 
 
 		api.addIntegration('GET', '/health', healthLambda);
-		api.addIntegration('POST', '/link', createLinkLambda);
+		api.addIntegration('POST', '/links', createLinkLambda);
+		api.addIntegration('GET', '/links/{hash}', getLinkLambda);
 	}
 }

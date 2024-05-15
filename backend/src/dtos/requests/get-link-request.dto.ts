@@ -1,8 +1,6 @@
 import { IsString } from "class-validator";
 
-export class Link {
-	declare PK: string;
-
+export class GetLinkRequestDto {
 	@IsString()
-	url: string;
+	hash: string;
 }
