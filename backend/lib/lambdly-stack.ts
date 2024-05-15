@@ -17,15 +17,16 @@ export class LambdlyStack extends cdk.Stack {
 
 		const healthLambda = new Lambda(this, 'health.ts');
 
-		const writeLambda = new Lambda(this, 'write.ts',
+		const createLinkLambda = new Lambda(this, 'create-link.ts',
 			{ environment: { TABLE_NAME: table.tableName } }
 		);
 
 
-		table.grantWriteData(writeLambda);
+
+		table.grantWriteData(createLinkLambda);
 
 
 		api.addIntegration('GET', '/health', healthLambda);
-		api.addIntegration('POST', '/write', writeLambda);
+		api.addIntegration('POST', '/link', createLinkLambda);
 	}
 }
