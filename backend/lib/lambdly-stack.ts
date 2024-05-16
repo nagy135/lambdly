@@ -25,13 +25,19 @@ export class LambdlyStack extends cdk.Stack {
 			{ environment: { TABLE_NAME: table.tableName } }
 		);
 
+		const getLinksLambda = new Lambda(this, 'get-links.ts',
+			{ environment: { TABLE_NAME: table.tableName } }
+		);
+
 
 		table.grantWriteData(createLinkLambda);
 		table.grantReadData(getLinkLambda);
+		table.grantReadData(getLinksLambda);
 
 
 		api.addIntegration('GET', '/health', healthLambda);
 		api.addIntegration('POST', '/links', createLinkLambda);
+		api.addIntegration('GET', '/links', getLinksLambda);
 		api.addIntegration('GET', '/links/{hash}', getLinkLambda);
 	}
 }

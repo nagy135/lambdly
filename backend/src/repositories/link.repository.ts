@@ -40,3 +40,18 @@ export const getLink = async (PK: string): Promise<Link> => {
 
 	return response.Item as Link;
 }
+
+/**
+	* @returns all Link entities
+	*/
+export const getLinks = async (): Promise<Link[]> => {
+	// TODO: remove this check by env alteration
+	if (!tableName) throw new Error("TABLE_NAME is not set");
+
+	const response = await db.scan({
+		TableName: tableName
+	});
+	console.log("[INFO] db output:", JSON.stringify(response, undefined, 2));
+
+	return response.Items as Link[];
+}

@@ -2,7 +2,7 @@ import { APIGatewayEvent } from "aws-lambda";
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 
-import { createLink, getLink } from "../src/repositories/link.repository";
+import { getLink } from "../src/repositories/link.repository";
 import { GetLinkRequestDto } from "../src/dtos/requests/get-link-request.dto";
 
 
