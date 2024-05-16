@@ -6,6 +6,9 @@ import { Link } from "../entities/link.entity";
 const db = DynamoDBDocument.from(new DynamoDB());
 const tableName = process.env.TABLE_NAME;
 
+/**
+	* creates a new Link entity, creating PK if not passed in
+	*/
 export const createLink = async (link: Link): Promise<Link> => {
 	link["PK"] = link["PK"] || Math.random().toString(36).slice(2);
 
@@ -23,6 +26,9 @@ export const createLink = async (link: Link): Promise<Link> => {
 	return link;
 }
 
+/**
+	* @returns Link entity matching given PK
+	*/
 export const getLink = async (PK: string): Promise<Link> => {
 	if (!tableName) throw new Error("TABLE_NAME is not set");
 
