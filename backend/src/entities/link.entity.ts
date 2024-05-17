@@ -4,8 +4,8 @@ export class Link {
 	// hash
 	declare PK: string;
 
-	// userId
-	declare SK: string;
+	@IsString()
+	userId: string;
 
 	@IsString()
 	url: string;

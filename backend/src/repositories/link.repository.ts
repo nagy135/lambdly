@@ -12,7 +12,7 @@ const tableName = process.env.TABLE_NAME;
 export const createLink = async ({ url, userId }: { url: string; userId: string }): Promise<Link> => {
 	const link: Link = {
 		PK: Math.random().toString(36).slice(2),
-		SK: userId,
+		userId,
 		url
 	};
 
@@ -32,28 +32,38 @@ export const createLink = async ({ url, userId }: { url: string; userId: string 
 /**
 	* @returns Link entity matching given PK
 	*/
-export const getLink = async (PK: string): Promise<Link> => {
+export const getLink = async (hash: string): Promise<Link | undefined> => {
 	if (!tableName) throw new Error("TABLE_NAME is not set");
 
 	const response = await db.get({
 		TableName: tableName,
-		Key: { PK }
+		Key: { PK: hash }
 	});
 	console.log("[INFO] db output:", JSON.stringify(response, undefined, 2));
 
-	return response.Item as Link;
+	return response.Item ? response.Item as Link : undefined;
 }
 
 /**
 	* @returns all Link entities
 	*/
-export const getLinks = async (): Promise<Link[]> => {
+export const getLinks = async (userId?: string): Promise<Link[]> => {
 	// TODO: remove this check by env alteration
 	if (!tableName) throw new Error("TABLE_NAME is not set");
 
-	const response = await db.scan({
-		TableName: tableName
-	});
+	const response = userId
+		? await db.query({
+			TableName: tableName,
+			IndexName: "userId_index",
+			KeyConditionExpression: "userId = :UID",
+			ExpressionAttributeValues: {
+				":UID": userId
+			}
+		})
+		: await db.scan({
+			TableName: tableName
+		});
+
 	console.log("[INFO] db output:", JSON.stringify(response, undefined, 2));
 
 	return response.Items as Link[];
