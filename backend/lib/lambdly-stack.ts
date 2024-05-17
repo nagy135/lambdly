@@ -13,6 +13,7 @@ export class LambdlyStack extends cdk.Stack {
 		const table = new Table(this, 'lambdlytable', {
 			billingMode: BillingMode.PAY_PER_REQUEST,
 			partitionKey: { name: 'PK', type: AttributeType.STRING },
+			sortKey: { name: 'SK', type: AttributeType.STRING }
 		});
 
 		const healthLambda = new Lambda(this, 'health.ts');
