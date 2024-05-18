@@ -1,0 +1,18 @@
+import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+
+type ItemProps = {
+	url: string;
+	hash: string;
+};
+export async function Item({ url, hash }: ItemProps) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>
+					<a href={url}>{url}</a>
+				</CardTitle>
+				<CardDescription>{hash}</CardDescription>
+			</CardHeader>
+		</Card>
+	)
+}
