@@ -1,10 +1,12 @@
+"use client";
+
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 type ItemProps = {
 	url: string;
 	hash: string;
 };
-export async function Item({ url, hash }: ItemProps) {
+export function Item({ url, hash }: ItemProps) {
 	return (
 		<Card>
 			<CardHeader>

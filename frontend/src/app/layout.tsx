@@ -3,6 +3,7 @@ import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@c
 
 import { Inter as FontSans } from "next/font/google"
 import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
 
 export const metadata = {
 	title: "Create T3 App",
@@ -31,7 +32,9 @@ export default function RootLayout({
 				>
 					<header>
 						<SignedOut>
-							<SignInButton />
+							<SignInButton>
+								<Button className="m-3">Sign in</Button>
+							</SignInButton>
 						</SignedOut>
 						<SignedIn>
 							<div className="p-3">
