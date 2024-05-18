@@ -34,7 +34,9 @@ export default function RootLayout({
 							<SignInButton />
 						</SignedOut>
 						<SignedIn>
-							<UserButton />
+							<div className="p-3">
+								<UserButton />
+							</div>
 						</SignedIn>
 					</header>
 					<main>
