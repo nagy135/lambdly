@@ -6,13 +6,14 @@ import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 
 const formSchema = z.object({
 	url: z.string().url(),
 })
 
 export function Insert() {
+	const user = useUser();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -21,7 +22,22 @@ export function Insert() {
 	});
 
 	function onSubmit(data: z.infer<typeof formSchema>) {
-		console.log(data);
+		const userId = user?.user?.id;
+		if (!userId) return; // never happens we are behind clerk provider
+
+		fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/links`,
+			{
+				method: "POST",
+				body: JSON.stringify({
+					url: data.url,
+					userId: userId
+				})
+			})
+			.then((res) => res.json())
+			.then((links) => {
+				console.log(links);
+				form.reset();
+			});
 	}
 
 	return (
