@@ -4,6 +4,7 @@ import { validateOrReject } from "class-validator";
 
 import { getLink } from "../src/repositories/link.repository";
 import { GetLinkRequestDto } from "../src/dtos/requests/get-link-request.dto";
+import { response } from "../src/utils";
 
 
 export const handler = async function(event: APIGatewayEvent) {
@@ -17,23 +18,23 @@ export const handler = async function(event: APIGatewayEvent) {
 	try {
 		await validateOrReject(getLinkRequestDto);
 	} catch (error) {
-		return {
+		return response({
 			statusCode: 400,
-			body: JSON.stringify(error, undefined, 2)
-		};
+			body: error
+		});
 	}
 
 	try {
 		const linkEntity = await getLink(getLinkRequestDto.hash);
-		return {
+		return response({
 			statusCode: 200,
-			body: JSON.stringify(linkEntity, undefined, 2)
-		};
+			body: linkEntity
+		});
 	} catch (error) {
-		return {
+		return response({
 			statusCode: 500,
-			body: JSON.stringify(error, undefined, 2)
-		};
+			body: error
+		});
 
 	}
 

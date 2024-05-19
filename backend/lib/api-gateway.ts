@@ -15,6 +15,12 @@ export class ApiGateway extends RestApi {
 					removalPolicy: RemovalPolicy.DESTROY
 				}))
 			}
+		});
+		this.root.addCorsPreflight({
+			allowOrigins: ['*'],
+			allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+			allowHeaders: ['Content-Type', 'Authorization', 'X-Amz-Date', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
+			allowCredentials: true,
 		})
 	}
 
