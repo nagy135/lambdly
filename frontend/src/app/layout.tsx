@@ -4,6 +4,8 @@ import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@c
 import { Inter as FontSans } from "next/font/google"
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
+import { ThemeProvider } from "~/components/providers/theme";
+import { ThemeSwitcher } from "~/components/theme-switcher";
 
 export const metadata = {
 	title: "Create T3 App",
@@ -30,21 +32,29 @@ export default function RootLayout({
 						fontSans.variable
 					)}
 				>
-					<header>
-						<SignedOut>
-							<SignInButton>
-								<Button className="m-3">Sign in</Button>
-							</SignInButton>
-						</SignedOut>
-						<SignedIn>
-							<div className="p-3">
-								<UserButton />
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<header>
+							<div className="flex gap-3 m-3">
+								<SignedOut>
+									<SignInButton>
+										<Button className="m-3">Sign in</Button>
+									</SignInButton>
+								</SignedOut>
+								<SignedIn>
+									<UserButton />
+								</SignedIn>
+								<ThemeSwitcher />
 							</div>
-						</SignedIn>
-					</header>
-					<main>
-						{children}
-					</main>
+						</header>
+						<main>
+							{children}
+						</main>
+					</ThemeProvider>
 				</body>
 			</html>
 		</ClerkProvider>
