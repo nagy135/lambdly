@@ -6,12 +6,14 @@ import { Link } from "../entities/link.entity";
 const db = DynamoDBDocument.from(new DynamoDB());
 const tableName = process.env.TABLE_NAME;
 
+const prefix = (id: string) => id.startsWith("LINKS#") ? id : `LINK#${id}`;
+
 /**
 	* creates a new Link entity, creating PK if not passed in
 	*/
 export const createLink = async ({ url, userId }: { url: string; userId: string }): Promise<Link> => {
 	const link: Link = {
-		PK: Math.random().toString(36).slice(2),
+		PK: prefix(Math.random().toString(36).slice(2)),
 		userId,
 		url
 	};
@@ -26,6 +28,7 @@ export const createLink = async ({ url, userId }: { url: string; userId: string 
 		ConditionExpression: `attribute_not_exists(PK)`
 	});
 	console.log("[INFO] db output:", JSON.stringify(response, undefined, 2));
+
 	return link;
 }
 
@@ -37,7 +40,7 @@ export const getLink = async (hash: string): Promise<Link | undefined> => {
 
 	const response = await db.get({
 		TableName: tableName,
-		Key: { PK: hash }
+		Key: { PK: prefix(hash) }
 	});
 	console.log("[INFO] db output:", JSON.stringify(response, undefined, 2));
 
