@@ -35,15 +35,30 @@ export class LambdlyStack extends cdk.Stack {
 			{ environment: { TABLE_NAME: table.tableName } }
 		);
 
+		const createDashboardLambda = new Lambda(this, 'create-dashboard.ts',
+			{ environment: { TABLE_NAME: table.tableName } }
+		);
+
+		const getDashboardLambda = new Lambda(this, 'get-dashboard.ts',
+			{ environment: { TABLE_NAME: table.tableName } }
+		);
+
 
 		table.grantWriteData(createLinkLambda);
 		table.grantReadData(getLinkLambda);
 		table.grantReadData(getLinksLambda);
 
+		table.grantWriteData(createDashboardLambda);
+		table.grantReadData(getDashboardLambda);
+
 
 		api.addIntegration('GET', '/health', healthLambda);
-		api.addIntegration('POST', '/links', createLinkLambda);
+
 		api.addIntegration('GET', '/links', getLinksLambda);
+		api.addIntegration('POST', '/links', createLinkLambda);
 		api.addIntegration('GET', '/links/{hash}', getLinkLambda);
+
+		api.addIntegration('GET', '/dashboards/{userId}', getDashboardLambda);
+		api.addIntegration('POST', '/dashboards', createDashboardLambda);
 	}
 }
