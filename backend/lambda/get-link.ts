@@ -27,8 +27,11 @@ export const handler = async function(event: APIGatewayEvent) {
 	try {
 		const linkEntity = await getLink(getLinkRequestDto.hash);
 		return response({
-			statusCode: 200,
-			body: linkEntity
+			statusCode: 301,
+			body: linkEntity,
+			headers: {
+				Location: linkEntity?.url
+			}
 		});
 	} catch (error) {
 		return response({
